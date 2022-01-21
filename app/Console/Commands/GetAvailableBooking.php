@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Mail\AvailableSlots;
 use App\Slick;
 use App\ValueObjects\Availability;
-use App\ValueObjects\AvailableSlot;
+use App\ValueObjects\TimeSlot;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -21,7 +21,7 @@ class GetAvailableBooking extends Command
     {
         $slick = new Slick;
 
-        $availability = $slick->getAvailability(Carbon::now()->startOfDay());
+        $availability = $slick->getAvailability(Carbon::tomorrow()->startOfDay());
 
         $end = Carbon::now()->startOfDay()->addWeeks(config('slick.lookout_weeks', 2));
 
@@ -33,8 +33,8 @@ class GetAvailableBooking extends Command
                     ->add(
                         $slick
                         ->getAvailableSlots($availability->date)
-                        ->filter(function (AvailableSlot $slot) {
-                            return $slot->dateTime->isAfter($slot->dateTime->clone()->setTime(17,0));
+                        ->filter(function (TimeSlot $slot) {
+                            return $slot->isAvailable();
                         })
                     );
             }
