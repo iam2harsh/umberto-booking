@@ -4,7 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use App\ValueObjects\Availability;
-use App\ValueObjects\AvailableSlot;
+use App\ValueObjects\TimeSlot;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -41,7 +41,7 @@ class Slick
             )->object()->data
         )
             ->map(function ($data, $slot) {
-                return new AvailableSlot(Carbon::parse($slot));
+                return new TimeSlot(Carbon::parse($slot));
             })
             ->flatten();        
     }
