@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Exceptions\FailedToGetAvailability;
+use App\Exceptions\FailedToGetTimeSlot;
 use App\Mail\AvailableSlots;
 use App\Slick;
 use App\ValueObjects\Availability;
@@ -27,18 +29,28 @@ class GetAvailableBooking extends Command
 
         $finalSlots = collect();
 
-        $availability->each(function (Availability $availability) use ($end, &$finalSlots, $slick) {
-            if ($availability->isAvailable && $availability->date->isBefore($end)) {
-                $finalSlots
-                    ->add(
-                        $slick
-                        ->getAvailableSlots($availability->date)
-                        ->filter(function (TimeSlot $slot) {
-                            return $slot->isAvailable();
-                        })
-                    );
-            }
-        });
+        try {
+            $availability->each(function (Availability $availability) use ($end, &$finalSlots, $slick) {
+                if ($availability->isAvailable && $availability->date->isBefore($end)) {
+                    $finalSlots
+                        ->add(
+                            $slick
+                            ->getAvailableSlots($availability->date)
+                            ->filter(function (TimeSlot $slot) {
+                                return $slot->isAvailable();
+                            })
+                        );
+                }
+            });
+        }
+        catch (FailedToGetAvailability $exception)
+        {
+            report($exception);
+        }
+        catch (FailedToGetTimeSlot $exception)
+        {
+            report($exception);
+        }
 
         if ($finalSlots->isNotEmpty()) {
             $this->sendEmail($finalSlots);

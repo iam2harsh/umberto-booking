@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Exceptions\FailedToGetAvailability;
+use App\Exceptions\FailedToGetTimeSlot;
 use Carbon\Carbon;
 use App\ValueObjects\Availability;
 use App\ValueObjects\TimeSlot;
@@ -17,12 +19,16 @@ class Slick
 
     public function getAvailability(Carbon $start): Collection
     {
-        return Http::get(
+        $response = Http::get(
             Str::of($this->baseUri)
                 ->append('availability/weekly/2650/92546/10821/')
                 ->append($start->format('Y-m-d\TH:i:s'))
                 ->append('.000Z/1/')
-        )
+        );
+
+        throw_if($response->failed(), FailedToGetAvailability::class);
+
+        return $response
             ->collect()
             ->map(function ($available, $date) {
                 return new Availability(Carbon::parse($date), $available);
@@ -32,14 +38,16 @@ class Slick
 
     public function getAvailableSlots(Carbon $date): Collection
     {
-        return collect(
-            Http::get(
-                Str::of($this->baseUri)
-                    ->append('new/availability/appointment/2650/')
-                    ->append($date->format('Y-m-d\TH:i:s'))
-                    ->append('.000Z/92546/10821/')
-            )->object()->data
-        )
+        $response = Http::get(
+            Str::of($this->baseUri)
+                ->append('new/availability/appointment/2650/')
+                ->append($date->format('Y-m-d\TH:i:s'))
+                ->append('.000Z/92546/10821/')
+        );
+
+        throw_if($response->failed(), FailedToGetTimeSlot::class);
+
+        return collect($response->object()->data)
             ->map(function ($data, $slot) {
                 return new TimeSlot(Carbon::parse($slot));
             })
