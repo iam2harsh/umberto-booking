@@ -17,31 +17,29 @@ class GetAvailableBooking extends Command
 {
     protected $signature = 'get:booking';
 
-    protected $description = 'Get booking for a date range';
+    protected $description = 'Send email when eligible booking time slots are found';
 
-    public function handle()
+    public function handle(Slick $slick): void
     {
-        $slick = new Slick;
-
-        $availability = $slick->getAvailability(Carbon::tomorrow()->startOfDay());
-
         $end = Carbon::now()->startOfDay()->addWeeks(config('slick.lookout_weeks', 2));
 
-        $finalSlots = collect();
-
         try {
-            $availability->each(function (Availability $availability) use ($end, &$finalSlots, $slick) {
-                if ($availability->isAvailable && $availability->date->isBefore($end)) {
-                    $finalSlots
-                        ->add(
-                            $slick
-                            ->getAvailableSlots($availability->date)
-                            ->filter(function (TimeSlot $slot) {
-                                return $slot->isAvailable();
-                            })
-                        );
-                }
-            });
+            $slick
+                ->getAvailability(Carbon::tomorrow()->startOfDay())
+                ->filter(function ($availability) use ($end) {
+                    return $availability->isAvailable && $availability->date->isBefore($end);
+                })
+                ->transform(function (Availability $availability) use ($slick) {
+                    return $slick
+                        ->getAvailableSlots($availability->date)
+                        ->filter(function (TimeSlot $slot): bool {
+                            return $slot->isAvailable();
+                        });
+                })
+                ->whenNotEmpty(function(Collection $finalSlots) {
+                    Mail::to(config('slick.email'))
+                        ->send(new AvailableSlots($finalSlots->flatten()));
+                });
         }
         catch (FailedToGetAvailability $exception)
         {
@@ -51,15 +49,5 @@ class GetAvailableBooking extends Command
         {
             report($exception);
         }
-
-        if ($finalSlots->isNotEmpty()) {
-            $this->sendEmail($finalSlots);
-        }
-    }
-
-    private function sendEmail(Collection $slots)
-    {
-        Mail::to(config('slick.email'))
-            ->send(new AvailableSlots($slots->flatten()));
     }
 }
