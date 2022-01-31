@@ -29,7 +29,7 @@ class Slick
             ->map(function ($available, $date): Availability {
                 return new Availability(Carbon::parse($date), $available);
             })
-            ->flatten();        
+            ->flatten();
     }
 
     public function getAvailableSlots(Carbon $date): Collection
