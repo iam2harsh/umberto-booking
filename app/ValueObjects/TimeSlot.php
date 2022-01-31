@@ -13,7 +13,7 @@ class TimeSlot
     public function isAvailable(): bool
     {
         return $this->dateTime->isAfter(
-            $this->dateTime->clone()->setTime(config('slick.available_after_hour', 17),0)
+            $this->dateTime->clone()->setTime(config('slick.available_after_hour', 17), 0)
         );
     }
 }
