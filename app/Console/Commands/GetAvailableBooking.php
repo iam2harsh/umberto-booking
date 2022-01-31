@@ -37,6 +37,9 @@ class GetAvailableBooking extends Command
                             return $slot->isAvailable();
                         });
                 })
+                ->filter(function(Collection $slots) {
+                    return $slots->isNotEmpty();
+                })
                 ->whenNotEmpty(function(Collection $finalSlots) {
                     Mail::to(config('slick.email'))
                         ->send(new AvailableSlots($finalSlots->flatten()));
