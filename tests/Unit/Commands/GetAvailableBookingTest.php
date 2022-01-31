@@ -33,7 +33,7 @@ class GetAvailableBookingTest extends TestCase
 
         Mail::assertSent(AvailableSlots::class, function(AvailableSlots $mail) {
             return $mail->hasTo('test@example.com') &&
-                dd($mail->slots->count()) === 1 &&
+                $mail->slots->count() === 1 &&
                 $mail->slots->first()->dateTime->eq(Carbon::parse('2022-03-02 6pm'));
         });
     }
