@@ -47,4 +47,19 @@ class Slick
             })
             ->flatten();        
     }
+
+    public function getWeeklyAvailability(Carbon $start, int $weeks = 1): Collection
+    {
+        $result = new Collection;
+
+        foreach(range(1, $weeks) as $weekNumber) {
+            $result->add(
+                $this->getAvailability(
+                    $weekNumber === 1 ? $start : $start->addWeek()
+                )
+            );
+        }
+
+        return $result->collapse();
+    }
 }
