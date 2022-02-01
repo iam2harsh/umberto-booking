@@ -21,11 +21,12 @@ class GetAvailableBooking extends Command
 
     public function handle(Slick $slick): void
     {
+        $start = Carbon::tomorrow()->startOfDay();
         $end = Carbon::now()->startOfDay()->addWeeks(config('slick.lookout_weeks', 2));
 
         try {
-            $slick
-                ->getAvailability(Carbon::tomorrow()->startOfDay())
+          $slick
+                ->getWeeklyAvailability($start, config('slick.lookout_weeks', 2))
                 ->filter(function ($availability) use ($end) {
                     return $availability->isAvailable &&
                         $availability->date->isBefore($end);
