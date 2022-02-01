@@ -25,8 +25,9 @@ class GetAvailableBookingTest extends TestCase
 
         Mail::fake();
 
-        Carbon::setTestNow('2022-03-01 ');
+        Carbon::setTestNow('2022-03-01');
 
+        Config::set('slick.lookout_weeks', 1);
         Config::set('slick.email', 'test@example.com');
 
         $this->artisan('get:booking')->assertSuccessful();
