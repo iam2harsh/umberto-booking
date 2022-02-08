@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Config;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class GetAvailableBookingTest extends TestCase
@@ -37,5 +38,42 @@ class GetAvailableBookingTest extends TestCase
                 $mail->slots->count() === 1 &&
                 $mail->slots->first()->dateTime->eq(Carbon::parse('2022-03-02 6pm'));
         });
+    }
+
+    /** @test **/
+    public function should_log_error_when_fails_to_get_availability(): void
+    {
+        Log::spy();
+
+        Http::fake([
+            '/book-online/availability/*' => Http::response([], 204),
+            '/book-online/new/availability/appointment/*' => Http::response([], 204)
+        ]);
+
+        $this->artisan('get:booking');
+        Log::shouldHaveReceived('error')
+            ->once();
+    }
+
+    /** @test **/
+    public function should_log_error_when_fails_to_get_time_slots(): void
+    {
+        Log::spy();
+
+        $availabilityResponse = File::get(__DIR__ . '/../../responses/successfulAvailability.json');
+
+        Http::fake([
+            '/book-online/availability/*' => Http::response($availabilityResponse),
+            '/book-online/new/availability/appointment/*' => Http::response([], 204)
+        ]);
+
+        Carbon::setTestNow('2022-03-01');
+
+        Config::set('slick.lookout_weeks', 1);
+
+        $this->artisan('get:booking');
+
+        Log::shouldHaveReceived('error')
+            ->once();
     }
 }
