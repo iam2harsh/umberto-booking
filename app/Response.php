@@ -9,13 +9,8 @@ class Response
     public static function handle(ClientResponse $response, string $type): ClientResponse
     {
         $exception = '\App\Exceptions\FailedToGet'. $type;
-        if ((int) $response->getStatusCode() === 204) {
-            throw new $exception;
-        }
 
-        if ($response->failed()) {
-            throw new $exception;
-        }
+        throw_if($response->failed() || $response->getStatusCode() === 204, $exception);
 
         return $response;
     }
