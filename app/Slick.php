@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Exceptions\FailedToGetAvailability;
+use App\Exceptions\FailedToGetTimeSlot;
 use Carbon\Carbon;
 use App\ValueObjects\Availability;
 use App\ValueObjects\TimeSlot;
@@ -24,7 +26,7 @@ class Slick
                 ->append('.000Z/1/')
         );
 
-        return Response::handle($response, 'Availability')
+        return Response::handle($response, FailedToGetAvailability::class)
             ->collect()
             ->map(function ($available, $date): Availability {
                 return new Availability(Carbon::parse($date), $available);
@@ -41,7 +43,7 @@ class Slick
                 ->append('.000Z/92546/10821/')
         );
 
-        return collect(Response::handle($response, 'TimeSlot')->object()->data)
+        return collect(Response::handle($response, FailedToGetTimeSlot::class)->object()->data)
             ->map(function ($data, $slot): TimeSlot {
                 return new TimeSlot(Carbon::parse($slot));
             })

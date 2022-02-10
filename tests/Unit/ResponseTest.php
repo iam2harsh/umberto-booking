@@ -22,7 +22,7 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'Availability');
+        Response::handle($response, FailedToGetAvailability::class);
     }
 
     /** @test */
@@ -36,7 +36,7 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'TimeSlot');
+        Response::handle($response, FailedToGetTimeSlot::class);
     }
 
     /** @test */
@@ -50,7 +50,7 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'Availability');
+        Response::handle($response, FailedToGetAvailability::class);
     }
 
     /** @test */
@@ -64,7 +64,7 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'TimeSlot');
+        Response::handle($response, FailedToGetTimeSlot::class);
     }
 
     /** @test */
@@ -78,7 +78,7 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'Availability');
+        Response::handle($response, FailedToGetAvailability::class);
     }
 
     /** @test */
@@ -92,6 +92,6 @@ class ResponseTest extends TestCase
 
         $response = Http::get('');
 
-        Response::handle($response, 'TimeSlot');
+        Response::handle($response, FailedToGetTimeSlot::class);
     }
 }
