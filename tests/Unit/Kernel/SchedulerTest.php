@@ -6,7 +6,7 @@ use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
 use Tests\TestCase;
 
-class KernelTest extends TestCase
+class SchedulerTest extends TestCase
 {
 
     /** @test */
