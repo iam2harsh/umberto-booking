@@ -16,9 +16,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetAvailability::class);
 
-        Http::fake(function() {
-            return Http::response(null, 204);
-        });
+        Http::fake(fn () => Http::response(null, 204));
 
         $response = Http::get('');
 
@@ -30,9 +28,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetTimeSlot::class);
 
-        Http::fake(function() {
-            return Http::response(null, 204);
-        });
+        Http::fake(fn () => Http::response(null, 204));
 
         $response = Http::get('');
 
@@ -44,9 +40,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetAvailability::class);
 
-        Http::fake(function() {
-            return Http::response(null, 400);
-        });
+        Http::fake(fn () => Http::response(null, 400));
 
         $response = Http::get('');
 
@@ -58,9 +52,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetTimeSlot::class);
 
-        Http::fake(function() {
-            return Http::response(null, 400);
-        });
+        Http::fake(fn () => Http::response(null, 400));
 
         $response = Http::get('');
 
@@ -72,9 +64,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetAvailability::class);
 
-        Http::fake(function() {
-            return Http::response(null, 500);
-        });
+        Http::fake(fn () => Http::response(null, 500));
 
         $response = Http::get('');
 
@@ -86,9 +76,7 @@ class ResponseTest extends TestCase
     {
         $this->expectException(FailedToGetTimeSlot::class);
 
-        Http::fake(function() {
-            return Http::response(null, 500);
-        });
+        Http::fake(fn () => Http::response(null, 500));
 
         $response = Http::get('');
 
