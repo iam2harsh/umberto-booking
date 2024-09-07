@@ -6,13 +6,14 @@ use App\Exceptions\FailedToGetAvailability;
 use App\Slick;
 use App\ValueObjects\Availability;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 class GetAvailabilityTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function handles_successful_response(): void
     {
         $response = File::get(__DIR__ . '/../../responses/successfulAvailability.json');
@@ -31,7 +32,7 @@ class GetAvailabilityTest extends TestCase
         });
     }
 
-    /** @test **/
+    #[Test]
     public function handles_no_content_response(): void
     {
         $this->expectException(FailedToGetAvailability::class);
@@ -43,7 +44,7 @@ class GetAvailabilityTest extends TestCase
         (new Slick)->getAvailability(Carbon::now());
     }
 
-    /** @test **/
+    #[Test]
     public function handles_error_response(): void
     {
         $this->expectException(FailedToGetAvailability::class);

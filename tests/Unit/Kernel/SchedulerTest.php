@@ -4,12 +4,13 @@ namespace Tests\Unit\Kernel;
 
 use Illuminate\Console\Scheduling\Event;
 use Illuminate\Console\Scheduling\Schedule;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class SchedulerTest extends TestCase
 {
 
-    /** @test */
+    #[Test]
     public function check_if_scheduler_is_running_the_get_booking_command_every_30_mins(): void
     {
         $schedule = app()->make(Schedule::class);

@@ -5,11 +5,12 @@ namespace Tests\Unit\ValueObjects;
 use App\ValueObjects\TimeSlot;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
 class TimeSlotTest extends TestCase
 {
-    /** @test */
+    #[Test]
     public function can_be_constructed(): void
     {
         Carbon::setTestNow('2022-01-01');
@@ -19,7 +20,7 @@ class TimeSlotTest extends TestCase
         $this->assertTrue($timeSlot->dateTime->eq(now()));
     }
 
-    /** @test */
+    #[Test]
     public function is_available_when_time_slot_is_after_set_hour(): void
     {
         Carbon::setTestNow('2022-01-01 2pm');
@@ -30,7 +31,7 @@ class TimeSlotTest extends TestCase
         $this->assertTrue($timeSlot->isAvailable());
     }
 
-    /** @test */
+    #[Test]
     public function is_not_available_when_time_slot_is_before_set_hour(): void
     {
         Carbon::setTestNow('2022-01-01 11am');

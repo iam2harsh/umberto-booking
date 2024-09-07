@@ -5,6 +5,7 @@ namespace Tests\Unit\Commands;
 use App\Mail\AvailableSlots;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Config;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Mail;
 
 class GetAvailableBookingTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function sends_email_when_available_time_slots_are_found(): void
     {
         $availabilityResponse = File::get(__DIR__ . '/../../responses/successfulAvailability.json');
@@ -40,7 +41,7 @@ class GetAvailableBookingTest extends TestCase
         });
     }
 
-    /** @test **/
+    #[Test]
     public function should_log_error_when_fails_to_get_availability(): void
     {
         Log::spy();
@@ -55,7 +56,7 @@ class GetAvailableBookingTest extends TestCase
             ->once();
     }
 
-    /** @test **/
+    #[Test]
     public function should_log_error_when_fails_to_get_time_slots(): void
     {
         Log::spy();
