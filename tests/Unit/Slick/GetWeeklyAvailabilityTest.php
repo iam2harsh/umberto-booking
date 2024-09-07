@@ -4,13 +4,14 @@ namespace Tests\Unit\Slick;
 
 use App\Slick;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 class GetWeeklyAvailabilityTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function repeats_twice_for_two_weeks(): void
     {
         $response = File::get(__DIR__ . '/../../responses/successfulAvailability.json');
@@ -24,7 +25,7 @@ class GetWeeklyAvailabilityTest extends TestCase
         $this->assertCount(14, $results);
     }
 
-    /** @test **/
+    #[Test]
     public function once_if_weeks_is_not_set(): void
     {
         $response = File::get(__DIR__ . '/../../responses/successfulAvailability.json');

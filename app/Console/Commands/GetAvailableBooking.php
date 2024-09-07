@@ -43,6 +43,7 @@ class GetAvailableBooking extends Command
                     Mail::to(config('slick.email'))
                         ->send(new AvailableSlots($finalSlots->flatten()));
                 });
+
         }
         catch (FailedToGetAvailability $exception)
         {

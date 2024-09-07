@@ -6,13 +6,14 @@ use App\Exceptions\FailedToGetTimeSlot;
 use App\Slick;
 use App\ValueObjects\TimeSlot;
 use Carbon\Carbon;
+use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 
 class GetAvailableSlotsTest extends TestCase
 {
-    /** @test **/
+    #[Test]
     public function handles_successful_response(): void
     {
         $response = File::get(__DIR__ . '/../../responses/successfulTimeSlots.json');
@@ -30,7 +31,7 @@ class GetAvailableSlotsTest extends TestCase
         });
     }
 
-    /** @test **/
+    #[Test]
     public function handles_no_content_response(): void
     {
         $this->expectException(FailedToGetTimeSlot::class);
@@ -42,7 +43,7 @@ class GetAvailableSlotsTest extends TestCase
         (new Slick)->getAvailableSlots(Carbon::now());
     }
 
-    /** @test **/
+    #[Test]
     public function handles_error_response(): void
     {
         $this->expectException(FailedToGetTimeSlot::class);
